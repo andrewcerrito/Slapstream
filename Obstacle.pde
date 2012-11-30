@@ -21,7 +21,7 @@ class Obstacle {
     y+=4; // move down the screen
     if (y >= height + rad) { // if circle leaves bottom of screen:
       y = (int) -rad; // reset to top of screen
-      x = (int) random(0, width); // get a new random width
+      x = (int) random(0, 640); // get a new random width - SET TO 600 FOR NOW, CHANGE BACK LATER
       w = (int) random(30, maxSize); // get a new random size
       rad = w/2; // correct the radius variable with the new width
     }

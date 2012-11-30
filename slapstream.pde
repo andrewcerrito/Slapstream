@@ -1,3 +1,6 @@
+import SimpleOpenNI.*;
+SimpleOpenNI kinect;
+
 Hero hero;
 Obstacle obst;
 Star[] stars;
@@ -9,28 +12,34 @@ int randX;
 color c1 = color(0, 0, 0);
 
 void setup() {
-  size(600, 850);
+  size((600+640), 850);
   smooth();
-  randX = (int) random(0, width);
+  randX = (int) random(0, 600); // SET TO 600 - CHANGE BACK LATER
   background(c1);
+  textSize(30);
+  
 
   // define hero, obstacle, and stars
-  hero = new Hero(width/2, height-80, 70);
+  hero = new Hero(600/2, height-80, 70); //SET TO 600 - CHANGE BACK LATER
   obst = new Obstacle(randX, 10);
   stars = new Star[width];
   for (int i = 0; i < stars.length; i ++) stars[i] = new Star();
   offset = new PVector(width / 2, height / 2);
+  
+  //Kinect init
+  kinect = new SimpleOpenNI(this);
+  kinect.enableDepth();
+  kinect.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 }
 
 void draw() {
   background(c1);
-  //   for (int i=0; i < starArray.length; i++) {
-  //  starArray[i].display();
-  //   }
   starField();
+  fill(255);
+  text (frameRate, width-60, height-60);
+  kinectDraw();
   hero.display();
   obst.display();
-
   hero.moveCheck();
   obst.move();
   obst.collideDetect(hero.x, hero.y, hero.rad);
