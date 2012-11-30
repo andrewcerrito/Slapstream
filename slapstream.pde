@@ -8,6 +8,9 @@ Star[] stars;
 // For the star movement:
 PVector offset;
 
+//These probably shouldn't be global but they're gonna be
+float leftHandMagnitude, rightHandMagnitude;
+
 int randX;
 color c1 = color(0, 0, 0);
 

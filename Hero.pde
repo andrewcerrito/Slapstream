@@ -18,19 +18,25 @@ class Hero {
 
 
   void moveCheck() {
-    if (keyPressed) {
-      if (key == CODED) {
-        if (keyCode == LEFT) {
-          //          println("left pressed");
-          x-=3;
-        }
-        if (keyCode == RIGHT) {
-          //          println("right pressed");
-          x+=3;
-        }
-      }
+    if (leftHandMagnitude <= 300) {
+      x-=3;
     }
+    if (rightHandMagnitude <= 300) {
+      x+=3;
+    }
+
+    //    if (keyPressed) {
+    //      if (key == CODED) {
+    //        if (keyCode == LEFT) {
+    //          //          println("left pressed");
+    //          x-=3;
+    //        }
+    //        if (keyCode == RIGHT) {
+    //          //          println("right pressed");
+    //          x+=3;
+    //        }
+    //      }
+    //    }
   }
-  
 }
 

@@ -22,8 +22,8 @@ void kinectDraw() {
       PVector leftHandVector = PVector.sub(head, leftHand);
 
       // calculate the distance and direction of the difference vector
-      float rightHandMagnitude = rightHandVector.mag();
-      float leftHandMagnitude = leftHandVector.mag();
+      rightHandMagnitude = rightHandVector.mag();
+      leftHandMagnitude = leftHandVector.mag();
       // this is for unit vectors - uncomment it if you need to do something with direction
       //      rightHandVector.normalize();
       //      leftHandVector.normalize();
