@@ -8,8 +8,8 @@ Star[] stars;
 // array and variables for storing previous magnitudes
 int[] leftMagArray = new int[5];
 int[] rightMagArray = new int[5];
-int leftSpeed, rightSpeed;
-
+int leftSpeed, rightSpeed, topSpeed;
+float leftSpeedAdj, rightSpeedAdj;
 
 // For the star movement:
 PVector offset;
@@ -45,7 +45,10 @@ void draw() {
   starField();
   fill(255);
   text (frameRate, width-60, height-60);
+  text (topSpeed, width-60, height-100);
+  
   kinectDraw();
+  topSpeedCheck();
   hero.display();
   obst.display();
   hero.moveCheck();
@@ -69,7 +72,7 @@ void starField() {
   offset.add(angle);
 }
 
-// Calculate average speed of hands over past 5 frames.
+// Calculate average speed of hands over past 5 frames and return an adjusted value.
 // This is messy because I couldn't get my arrays to work (they're commented out below)
 void speedCalc() { 
 
@@ -85,7 +88,9 @@ int lspd2 = abs(leftMagArray[2] - leftMagArray[1]);
 int lspd3 = abs(leftMagArray[1] - leftMagArray[0]);
 
 leftSpeed = ((lspd+lspd1+lspd2+lspd3)/(leftMagArray.length - 1));
-println("Left Speed: " + leftSpeed);
+leftSpeedAdj = map(leftSpeed,0,150,0,4);
+
+//println("Left Speed: " + leftSpeed);
   
 rightMagArray[4] = rightMagArray[3];
 rightMagArray[3] = rightMagArray[2];
@@ -99,7 +104,10 @@ int rspd2 = abs(rightMagArray[2] - rightMagArray[1]);
 int rspd3 = abs(rightMagArray[1] - rightMagArray[0]);
 
 rightSpeed = ((rspd+rspd1+rspd2+rspd3)/(rightMagArray.length - 1));
-println("Right Speed: " + rightSpeed);
+rightSpeedAdj = map(rightSpeed,0,150,0,4);
+
+
+//println("Right Speed: " + rightSpeed);
 
 //  // Shift of old values: position 4 gets position 3's value, etc.
 //  for (int i=(leftMagArray.length)-1; i<=1; i--) {
@@ -119,3 +127,9 @@ println("Right Speed: " + rightSpeed);
 //  rightMagArray[0] = (int) rightHandMagnitude;
 }
 
+// tracks top speeds - for testing only
+void topSpeedCheck() {
+  if (leftSpeed > topSpeed && leftSpeed <=150) topSpeed = leftSpeed;
+  if (rightSpeed > topSpeed && rightSpeed <=150) topSpeed = rightSpeed;
+  println(topSpeed);
+}
