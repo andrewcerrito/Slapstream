@@ -5,6 +5,12 @@ Hero hero;
 Obstacle obst;
 Star[] stars;
 
+// array and variables for storing previous magnitudes
+int[] leftMagArray = new int[5];
+int[] rightMagArray = new int[5];
+int leftSpeed, rightSpeed;
+
+
 // For the star movement:
 PVector offset;
 
@@ -20,7 +26,6 @@ void setup() {
   randX = (int) random(0, 600); // SET TO 600 - CHANGE BACK LATER
   background(c1);
   textSize(30);
-  
 
   // define hero, obstacle, and stars
   hero = new Hero(600/2, height-80, 70); //SET TO 600 - CHANGE BACK LATER
@@ -28,7 +33,7 @@ void setup() {
   stars = new Star[width];
   for (int i = 0; i < stars.length; i ++) stars[i] = new Star();
   offset = new PVector(width / 2, height / 2);
-  
+
   //Kinect init
   kinect = new SimpleOpenNI(this);
   kinect.enableDepth();
@@ -62,5 +67,55 @@ void starField() {
   angle.mult(5); 
 
   offset.add(angle);
+}
+
+// Calculate average speed of hands over past 5 frames.
+// This is messy because I couldn't get my arrays to work (they're commented out below)
+void speedCalc() { 
+
+leftMagArray[4] = leftMagArray[3];
+leftMagArray[3] = leftMagArray[2];
+leftMagArray[2] = leftMagArray[1];
+leftMagArray[1] = leftMagArray[0];
+leftMagArray[0] = (int) leftHandMagnitude;
+
+int lspd = abs(leftMagArray[4] - leftMagArray[3]);
+int lspd1 = abs(leftMagArray[3] - leftMagArray[2]);
+int lspd2 = abs(leftMagArray[2] - leftMagArray[1]);
+int lspd3 = abs(leftMagArray[1] - leftMagArray[0]);
+
+leftSpeed = ((lspd+lspd1+lspd2+lspd3)/(leftMagArray.length - 1));
+println("Left Speed: " + leftSpeed);
+  
+rightMagArray[4] = rightMagArray[3];
+rightMagArray[3] = rightMagArray[2];
+rightMagArray[2] = rightMagArray[1];
+rightMagArray[1] = rightMagArray[0];
+rightMagArray[0] = (int) rightHandMagnitude;
+
+int rspd = abs(rightMagArray[4] - rightMagArray[3]);
+int rspd1 = abs(rightMagArray[3] - rightMagArray[2]);
+int rspd2 = abs(rightMagArray[2] - rightMagArray[1]);
+int rspd3 = abs(rightMagArray[1] - rightMagArray[0]);
+
+rightSpeed = ((rspd+rspd1+rspd2+rspd3)/(rightMagArray.length - 1));
+println("Right Speed: " + rightSpeed);
+
+//  // Shift of old values: position 4 gets position 3's value, etc.
+//  for (int i=(leftMagArray.length)-1; i<=1; i--) {
+//    leftMagArray[i] = leftMagArray[i-1];
+//    println("Left array " + i + ": " + leftMagArray[i]);
+//  }
+//  // First value gets current magnitude.
+//  leftMagArray[0] = (int) leftHandMagnitude;
+//  // println("Left Current Magnitude: " + leftMagArray[0]);
+//
+//
+//  // Shift of old values: position 4 gets position 3's value, etc.
+//  for (int i=(rightMagArray.length)-1; i<=1; i--) {
+//    rightMagArray[i] = rightMagArray[i-1];
+//  }
+//  // First value gets current magnitude.
+//  rightMagArray[0] = (int) rightHandMagnitude;
 }
 

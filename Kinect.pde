@@ -27,17 +27,25 @@ void kinectDraw() {
       // this is for unit vectors - uncomment it if you need to do something with direction
       //      rightHandVector.normalize();
       //      leftHandVector.normalize();
-
+     
 
       // draw a line between the two hands
       kinect.drawLimb(userId, SimpleOpenNI.SKEL_HEAD, SimpleOpenNI.SKEL_RIGHT_HAND);
       kinect.drawLimb(userId, SimpleOpenNI.SKEL_HEAD, SimpleOpenNI.SKEL_LEFT_HAND);
-      // display
+     
+      //calculate left and right hand speeds
+      speedCalc();
+     
+      // display info onscreen for testing
       pushMatrix();
       fill(255, 0, 0);
       text("left: " + leftHandMagnitude, 10, height-200);
+      text("speed: " + leftSpeed, 10, height-250);
       text("right: " + rightHandMagnitude, width-200, height-200);
+      text("speed: " + rightSpeed, width-200, height-250);
       popMatrix();
+      
+
     }
   }
 }

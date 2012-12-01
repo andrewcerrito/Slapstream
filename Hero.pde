@@ -18,10 +18,10 @@ class Hero {
 
 
   void moveCheck() {
-    if (leftHandMagnitude <= 300) {
+    if (leftHandMagnitude <= 300 && x>=0) {
       x-=3;
     }
-    if (rightHandMagnitude <= 300) {
+    if (rightHandMagnitude <= 300 && x<=600) {
       x+=3;
     }
 
