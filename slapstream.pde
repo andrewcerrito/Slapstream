@@ -18,14 +18,18 @@ PVector offset;
 float leftHandMagnitude, rightHandMagnitude;
 
 int randX;
+
 color c1 = color(0, 0, 0);
+PFont f;
+
 
 void setup() {
   size((600+640), 850);
   smooth();
   randX = (int) random(0, 600); // SET TO 600 - CHANGE BACK LATER
   background(c1);
-  textSize(30);
+  f = createFont("C64Pro-Style", 24, true);
+  
 
   // define hero, obstacle, and stars
   hero = new Hero(600/2, height-80, 70); //SET TO 600 - CHANGE BACK LATER
@@ -38,6 +42,7 @@ void setup() {
   kinect = new SimpleOpenNI(this);
   kinect.enableDepth();
   kinect.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
+  PFont.list();
 }
 
 void draw() {
@@ -88,7 +93,7 @@ int lspd2 = abs(leftMagArray[2] - leftMagArray[1]);
 int lspd3 = abs(leftMagArray[1] - leftMagArray[0]);
 
 leftSpeed = ((lspd+lspd1+lspd2+lspd3)/(leftMagArray.length - 1));
-leftSpeedAdj = map(leftSpeed,0,150,0,4);
+leftSpeedAdj = map(leftSpeed,0,100,1,4);
 
 //println("Left Speed: " + leftSpeed);
   
@@ -104,7 +109,7 @@ int rspd2 = abs(rightMagArray[2] - rightMagArray[1]);
 int rspd3 = abs(rightMagArray[1] - rightMagArray[0]);
 
 rightSpeed = ((rspd+rspd1+rspd2+rspd3)/(rightMagArray.length - 1));
-rightSpeedAdj = map(rightSpeed,0,150,0,4);
+rightSpeedAdj = map(rightSpeed,0,100,1,4);
 
 
 //println("Right Speed: " + rightSpeed);
