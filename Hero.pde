@@ -1,9 +1,9 @@
 class Hero {
 
-  int x, y, w;
+  float x, y, w;
   float rad;
 
-  Hero (int tx, int ty, int tw) {
+  Hero (float tx, float ty, float tw) {
     x = tx;
     y = ty;
     w = tw;
@@ -19,33 +19,18 @@ class Hero {
 // move hero if user is slapping and sprite is within bounds
   void moveCheck() {
     if (leftHandMagnitude <= 300 && x>=0) {
-      x =int(x -(3*leftSpeedAdj));
+      x = (x -(lhandvel.mag()/2));
       pushStyle();
       textSize(65);
-      text(3*leftSpeedAdj, 600/2, height/2);
       popStyle();
     }
     if (rightHandMagnitude <= 300 && x<=600) {
-      x = int (x+(3*rightSpeedAdj));
+      x = int (x+(rhandvel.mag())/2);
       pushStyle();
       textSize(65);
-      text(3*rightSpeedAdj, 600/2, height/2);
       popStyle();
       
     }
-
-    //    if (keyPressed) {
-    //      if (key == CODED) {
-    //        if (keyCode == LEFT) {
-    //          //          println("left pressed");
-    //          x-=3;
-    //        }
-    //        if (keyCode == RIGHT) {
-    //          //          println("right pressed");
-    //          x+=3;
-    //        }
-    //      }
-    //    }
   }
 }
 

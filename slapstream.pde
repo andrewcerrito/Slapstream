@@ -1,3 +1,9 @@
+// Slapstream
+// By Andrew Cerrito
+// Stars and parallax motion modified very slightly from William Smith's sketch on OpenProcessing:
+// http://www.openprocessing.org/sketch/63495
+// Thanks to Dan Shiffman, who reworked some of my code into cleaner, more usable code.
+
 import SimpleOpenNI.*;
 SimpleOpenNI kinect;
 
@@ -5,20 +11,21 @@ Hero hero;
 Obstacle obst;
 Star[] stars;
 
-// array and variables for storing previous magnitudes
-int[] leftMagArray = new int[5];
-int[] rightMagArray = new int[5];
-int leftSpeed, rightSpeed, topSpeed;
-float leftSpeedAdj, rightSpeedAdj;
+PVector rhand = new PVector(width/2, height/2);
+PVector prhand = new PVector(width/2, height/2);
+PVector rhandvel = new PVector(0, 0);
+
+PVector lhand = new PVector(width/2, height/2);
+PVector plhand = new PVector(width/2, height/2);
+PVector lhandvel = new PVector(0, 0);
 
 // For the star movement:
 PVector offset;
 
-//These probably shouldn't be global but they're gonna be
+// These probably shouldn't be global but they're going to be
 float leftHandMagnitude, rightHandMagnitude;
 
 int randX;
-
 color c1 = color(0, 0, 0);
 PFont f;
 
@@ -29,7 +36,7 @@ void setup() {
   randX = (int) random(0, 600); // SET TO 600 - CHANGE BACK LATER
   background(c1);
   f = createFont("C64Pro-Style", 24, true);
-  
+
 
   // define hero, obstacle, and stars
   hero = new Hero(600/2, height-80, 70); //SET TO 600 - CHANGE BACK LATER
@@ -50,15 +57,42 @@ void draw() {
   starField();
   fill(255);
   text (frameRate, width-60, height-60);
-  text (topSpeed, width-60, height-100);
-  
+//  text (topSpeed, width-60, height-100);
+
+  PVector rvelocity = PVector.sub(rhand, prhand);
+
+  rhandvel.x = lerp(rhandvel.x, rvelocity.x, 0.4);
+  rhandvel.y = lerp(rhandvel.y, rvelocity.y, 0.4);
+
+  PVector lvelocity = PVector.sub(lhand, plhand);
+
+  lhandvel.x = lerp(lhandvel.x, lvelocity.x, 0.4);
+  lhandvel.y = lerp(lhandvel.y, lvelocity.y, 0.4);
+
+
   kinectDraw();
-  topSpeedCheck();
   hero.display();
   obst.display();
   hero.moveCheck();
   obst.move();
   obst.collideDetect(hero.x, hero.y, hero.rad);
+
+
+  strokeWeight(1);
+  stroke(0, 255, 0);
+  pushMatrix();
+  translate(width/2, height/2);
+  scale(10);
+
+  stroke(0, 255, 0);
+  line(0, 0, rhandvel.x, rhandvel.y);
+  text (rhandvel.mag(), 0, 40);
+
+  stroke(255, 0, 0);
+  line(0, 0, lhandvel.x, lhandvel.y);
+  text (lhandvel.mag(), 0, 30);
+  
+  popMatrix();
 }
 
 void starField() {
@@ -71,70 +105,17 @@ void starField() {
   angle.normalize();
   //angle.mult(dist(width / 2, height / 2, mouseX, mouseY) / 50);
 
-  // this multiplier controls speed
+  // this multiplier controls speed of stars
   angle.mult(5); 
 
   offset.add(angle);
 }
 
-// Calculate average speed of hands over past 5 frames and return an adjusted value.
-// This is messy because I couldn't get my arrays to work (they're commented out below)
-void speedCalc() { 
-
-leftMagArray[4] = leftMagArray[3];
-leftMagArray[3] = leftMagArray[2];
-leftMagArray[2] = leftMagArray[1];
-leftMagArray[1] = leftMagArray[0];
-leftMagArray[0] = (int) leftHandMagnitude;
-
-int lspd = abs(leftMagArray[4] - leftMagArray[3]);
-int lspd1 = abs(leftMagArray[3] - leftMagArray[2]);
-int lspd2 = abs(leftMagArray[2] - leftMagArray[1]);
-int lspd3 = abs(leftMagArray[1] - leftMagArray[0]);
-
-leftSpeed = ((lspd+lspd1+lspd2+lspd3)/(leftMagArray.length - 1));
-leftSpeedAdj = map(leftSpeed,0,100,1,4);
-
-//println("Left Speed: " + leftSpeed);
-  
-rightMagArray[4] = rightMagArray[3];
-rightMagArray[3] = rightMagArray[2];
-rightMagArray[2] = rightMagArray[1];
-rightMagArray[1] = rightMagArray[0];
-rightMagArray[0] = (int) rightHandMagnitude;
-
-int rspd = abs(rightMagArray[4] - rightMagArray[3]);
-int rspd1 = abs(rightMagArray[3] - rightMagArray[2]);
-int rspd2 = abs(rightMagArray[2] - rightMagArray[1]);
-int rspd3 = abs(rightMagArray[1] - rightMagArray[0]);
-
-rightSpeed = ((rspd+rspd1+rspd2+rspd3)/(rightMagArray.length - 1));
-rightSpeedAdj = map(rightSpeed,0,100,1,4);
-
-
-//println("Right Speed: " + rightSpeed);
-
-//  // Shift of old values: position 4 gets position 3's value, etc.
-//  for (int i=(leftMagArray.length)-1; i<=1; i--) {
-//    leftMagArray[i] = leftMagArray[i-1];
-//    println("Left array " + i + ": " + leftMagArray[i]);
-//  }
-//  // First value gets current magnitude.
-//  leftMagArray[0] = (int) leftHandMagnitude;
-//  // println("Left Current Magnitude: " + leftMagArray[0]);
-//
-//
-//  // Shift of old values: position 4 gets position 3's value, etc.
-//  for (int i=(rightMagArray.length)-1; i<=1; i--) {
-//    rightMagArray[i] = rightMagArray[i-1];
-//  }
-//  // First value gets current magnitude.
-//  rightMagArray[0] = (int) rightHandMagnitude;
-}
 
 // tracks top speeds - for testing only
-void topSpeedCheck() {
-  if (leftSpeed > topSpeed && leftSpeed <=150) topSpeed = leftSpeed;
-  if (rightSpeed > topSpeed && rightSpeed <=150) topSpeed = rightSpeed;
-  println(topSpeed);
-}
+//void topSpeedCheck() {
+//  if (leftSpeed > topSpeed && leftSpeed <=150) topSpeed = leftSpeed;
+//  if (rightSpeed > topSpeed && rightSpeed <=150) topSpeed = rightSpeed;
+//  println(topSpeed);
+//}
+

@@ -16,6 +16,13 @@ void kinectDraw() {
       kinect.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, rightHand);
       kinect.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, leftHand);
       kinect.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_HEAD, head);
+      
+      // NEW: get current value for hand and store previous value
+      prhand = rhand;
+      rhand = rightHand;
+      
+      plhand = lhand;
+      lhand = leftHand;
 
       // subtract hand vectors from head to get difference vectors
       PVector rightHandVector = PVector.sub(head, rightHand);
@@ -32,20 +39,13 @@ void kinectDraw() {
       // draw a line between the two hands
       kinect.drawLimb(userId, SimpleOpenNI.SKEL_HEAD, SimpleOpenNI.SKEL_RIGHT_HAND);
       kinect.drawLimb(userId, SimpleOpenNI.SKEL_HEAD, SimpleOpenNI.SKEL_LEFT_HAND);
-     
-      //calculate left and right hand speeds
-      speedCalc();
-     
+
       // display info onscreen for testing
       pushMatrix();
       fill(255, 0, 0);
       text("left: " + leftHandMagnitude, 10, height-200);
-      text("speed: " + leftSpeed, 10, height-250);
       text("right: " + rightHandMagnitude, width-200, height-200);
-      text("speed: " + rightSpeed, width-200, height-250);
       popMatrix();
-      
-
     }
   }
 }

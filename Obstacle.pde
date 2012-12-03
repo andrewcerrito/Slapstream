@@ -27,7 +27,7 @@ class Obstacle {
     }
   }
 
-  void collideDetect (int heroX, int heroY, float heroRad) {
+  void collideDetect (float heroX, float heroY, float heroRad) {
     float distFromHero = dist(x, y, heroX, heroY);
     if (distFromHero < rad + heroRad) {
       c1 = color(0, 0, 255);
